@@ -25,7 +25,11 @@ docker exec -it コピーしたコンテナID bash
 ```
 npm run dev
 ```
-### backendコンテナ内でmigration
+### migration
+```
+docker exec -it コピーしたコンテナID bash
+```
+でコンテナ内に入り
 ```
 npx prisma migrate dev --name init
 ```
