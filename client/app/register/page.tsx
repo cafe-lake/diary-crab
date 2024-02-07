@@ -4,8 +4,21 @@ export default function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-between">
       <div className="flex flex-col items-center justify-center min-h-screen">
-        <h2 className="text-2xl font-bold mb-4">ログイン</h2>
+        <h2 className="text-2xl font-bold mb-4">新規登録</h2>
         <form className="w-full max-w-sm">
+          <div className="mb-4">
+            <label
+              htmlFor="name"
+              className="block text-gray-700 font-bold mb-2"
+            >
+              名前
+            </label>
+            <input
+              type="text"
+              id="name"
+              className="w-full px-3 py-2 border rounded-md focus:outline-none focus:border-blue-500"
+            />
+          </div>
           <div className="mb-4">
             <label
               htmlFor="email"
@@ -36,11 +49,13 @@ export default function Home() {
             type="submit"
             className="w-full bg-blue-500 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
           >
-            ログイン
+            新規登録
           </button>
         </form>
         <div className="mt-4">
-          <Link href="/register">まだカニでない方はこちらでカニになる</Link>
+          <p>
+            <Link href="/">もうカニの方はログインへ</Link>
+          </p>
         </div>
       </div>
     </main>
