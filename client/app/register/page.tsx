@@ -4,7 +4,7 @@ export default function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-between">
       <div className="flex flex-col items-center justify-center min-h-screen">
-        <h2 className="text-2xl font-bold mb-4">新規登録</h2>
+        <h2 className="text-2xl font-bold mb-4">カニになる</h2>
         <form className="w-full max-w-sm">
           <div className="mb-4">
             <label
@@ -49,7 +49,7 @@ export default function Home() {
             type="submit"
             className="w-full bg-blue-500 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
           >
-            新規登録
+            カニになる
           </button>
         </form>
         <div className="mt-4">
