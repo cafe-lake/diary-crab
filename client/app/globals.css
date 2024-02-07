@@ -1,6 +1,12 @@
+@import url('https://fonts.googleapis.com/css2?family=Hachi+Maru+Pop&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+*>*{
+  font-family: 'Hachi Maru Pop', cursive;
+}
 
 :root {
   --foreground-rgb: 0, 0, 0;
