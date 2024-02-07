@@ -14,7 +14,7 @@ docker exec -it コピーしたコンテナID bash
 ```
 でコンテナ内に入り
 ```
-npm run dev
+npm install && npm run dev
 ```
 
 ### バックエンドサーバー起動
@@ -23,7 +23,7 @@ docker exec -it コピーしたコンテナID bash
 ```
 でコンテナ内に入り
 ```
-npm run dev
+npm install && npm run dev
 ```
 ### migration
 ```
