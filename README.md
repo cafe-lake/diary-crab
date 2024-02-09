@@ -27,7 +27,7 @@ npm install && npm run dev
 ```
 ### migration
 ```
-docker exec -it コピーしたコンテナID bash
+docker exec -it server bash
 ```
 でコンテナ内に入り
 ```
