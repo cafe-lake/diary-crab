@@ -29,11 +29,11 @@ export default function Home() {
               htmlFor="email"
               className="block text-gray-700 font-bold mb-2"
             >
-              メールアドレス
+              ログインID
             </label>
             <input
-              type="email"
-              id="email"
+              type="id"
+              id="id"
               className="w-full px-3 py-2 border rounded-md focus:outline-none focus:border-blue-500"
             />
           </div>
@@ -43,6 +43,19 @@ export default function Home() {
               className="block text-gray-700 font-bold mb-2"
             >
               パスワード
+            </label>
+            <input
+              type="password"
+              id="password"
+              className="w-full px-3 py-2 border rounded-md focus:outline-none focus:border-blue-500"
+            />
+          </div>
+          <div className="mb-4">
+            <label
+              htmlFor="password"
+              className="block text-gray-700 font-bold mb-2"
+            >
+              パスワード確認
             </label>
             <input
               type="password"
