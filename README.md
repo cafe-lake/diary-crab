@@ -10,7 +10,7 @@ docker-compose up
 ```
 ### フロントエンドサーバー起動
 ```
-docker exec -it コピーしたコンテナID bash
+docker exec -it client bash
 ```
 でコンテナ内に入り
 ```
@@ -19,7 +19,7 @@ npm install && npm run dev
 
 ### バックエンドサーバー起動
 ```
-docker exec -it コピーしたコンテナID bash
+docker exec -it server bash
 ```
 でコンテナ内に入り
 ```
