@@ -4,6 +4,11 @@
 ```
 git clone git@github.com:cafe-lake/diary-crab.git
 ```
+### .env.exampleからコピーで.envを作って必要な情報を入れる
+```
+cp .env.example .env
+```
+
 ### dockerコンテナ立ち上げ
 ```
 docker-compose up
