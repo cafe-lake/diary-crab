@@ -19,25 +19,19 @@ export default function Home() {
         </div>
       </div>
       <div className="mt-4">将来の夢：タカアシガニ</div>
-      <div className="flex mt-10">
-        <div className="w-1/2 border border-solid border-black">
-          <div className="w-full relative">
-            <Image
-              src={CrabImage}
-              width={0}
-              height={0}
-              sizes="100%"
-              alt="crab"
-            />
-          </div>
-          <div>2回目の投稿！将来はタカアシガニになりたいな！</div>
+      <div className="flex mt-10 h-[50vw]">
+        <div className="w-full h-full relative">
+          <Image src={CrabImage} layout="fill" objectFit="contain" alt="crab" />
         </div>
-        <div className="w-1/2 border border-solid border-black">
-          <div className="w-full relative">
-            <Image src={CrabImage} width={0} height={0} alt="crab" />
-          </div>
-          <div>初投稿！色々な思い出を残していくよ</div>
+        <div className="w-full h-full relative">
+          <Image src={CrabImage} layout="fill" objectFit="contain" alt="crab" />
         </div>
+      </div>
+      <div className="flex h-[50vw]">
+        <div className="w-full h-full relative">
+          2回目の投稿！星かと思ったらヒトデでした☆
+        </div>
+        <div className="w-full h-full relative">初投稿！よろしくね</div>
       </div>
     </main>
   );
