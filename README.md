@@ -35,6 +35,13 @@ npm install && npm run dev
 docker exec -it server bash
 ```
 でコンテナ内に入り
+
+初回なら
 ```
 npx prisma migrate dev --name init
+```
+
+テーブル追加、変更などしたら
+```
+npx prisma migrate dev --name ええかんじのmigrationの内容がわかる名前
 ```
