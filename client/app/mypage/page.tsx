@@ -3,8 +3,10 @@ import Image from "next/image";
 import CrabImage from "../crab.jpg";
 
 export default function Home() {
+  const elements = Array.from({ length: 20 }, (_, index) => index + 1);
+
   return (
-    <main className="min-h-screen p-4">
+    <main className="min-h-screen p-4 max-w-[800px] m-auto">
       <h2 className="text-2xl font-bold p-4 text-center">マイページ</h2>
       <div className="flex">
         <div>
@@ -20,18 +22,30 @@ export default function Home() {
       </div>
       <div className="mt-4">将来の夢：タカアシガニ</div>
       <div className="flex mt-10 h-[50vw]">
-        <div className="w-full h-full relative">
+        <div className="w-full h-full relative border border-solid border-gray-400 border-b-0">
           <Image src={CrabImage} layout="fill" objectFit="contain" alt="crab" />
         </div>
-        <div className="w-full h-full relative">
+        <div className="w-full h-full relative border border-solid border-gray-400 border-b-0">
           <Image src={CrabImage} layout="fill" objectFit="contain" alt="crab" />
         </div>
       </div>
       <div className="flex h-[50vw]">
-        <div className="w-full h-full relative">
-          2回目の投稿！星かと思ったらヒトデでした☆
+        <div className="w-full h-full relative border border-solid border-gray-400 border-t-0 overflow-hidden">
+          <p className="h-6 border-b border-gray-400 mx-2">
+            2回目の投稿！星かと思って手にとったらヒトデでした☆
+          </p>
+          {elements.map((element) => (
+            <p key={element} className="h-6 border-b border-gray-400 mx-2"></p>
+          ))}
         </div>
-        <div className="w-full h-full relative">初投稿！よろしくね</div>
+        <div className="w-full h-full relative border border-solid border-gray-400 border-t-0 overflow-hidden">
+          <p className="h-6 border-b border-gray-400 mx-2">
+            初投稿！よろしくね
+          </p>
+          {elements.map((element) => (
+            <p key={element} className="h-6 border-b border-gray-400 mx-2"></p>
+          ))}
+        </div>
       </div>
     </main>
   );
