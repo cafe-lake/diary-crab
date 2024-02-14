@@ -15,13 +15,14 @@ export default function Home() {
           </div>
           <div className="text-center">かにくぼカニ</div>
         </div>
-        <div>
-          <div>フォロー：0</div>
-          <div>フォロワー：0</div>
+        <div className="ml-2">
+          <button className="border border-solid border-gray-400 rounded bg-white p-1">
+            みんなの日記をよむ
+          </button>
         </div>
       </div>
       <div className="mt-4">将来の夢：タカアシガニ</div>
-      <div className="flex mt-10 h-[50vw]">
+      <div className="flex mt-10 h-[50vw] bg-white">
         <div className="w-full h-full relative border border-solid border-gray-400 border-b-0">
           <Image src={CrabImage} layout="fill" objectFit="contain" alt="crab" />
         </div>
@@ -29,7 +30,7 @@ export default function Home() {
           <Image src={CrabImage} layout="fill" objectFit="contain" alt="crab" />
         </div>
       </div>
-      <div className="flex h-[50vw]">
+      <div className="flex h-[50vw] bg-white">
         <div className="w-full h-full relative border border-solid border-gray-400 border-t-0 overflow-hidden">
           <p className="h-6 border-b border-gray-400 mx-2">
             2回目の投稿！星かと思って手にとったらヒトデでした☆
