@@ -1,9 +1,15 @@
 "use client";
 import Image from "next/image";
 import CrabImage from "../crab.jpg";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
+  const router = useRouter();
   const elements = Array.from({ length: 20 }, (_, index) => index + 1);
+  
+  const onClickCreateDiary = () => {
+    router.push("/create-diary");
+  }
 
   return (
     <main className="min-h-screen p-4 max-w-[800px] m-auto">
@@ -16,8 +22,11 @@ export default function Home() {
           <div className="text-center">かにくぼカニ</div>
         </div>
         <div className="ml-2">
+          <button className="border border-solid border-gray-400 rounded bg-white p-1 mb-1" onClick={onClickCreateDiary}>
+            絵日記をかく
+          </button>
           <button className="border border-solid border-gray-400 rounded bg-white p-1">
-            みんなの日記をよむ
+            みんなの絵日記をよむ
           </button>
         </div>
       </div>
