@@ -1,10 +1,13 @@
 "use client";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
+  const router = useRouter();
   const onClickSubmit = () => {
     // TODO: register処理(https://github.com/cafe-lake/diary-crab/issues/1)
     console.log("register処理開始");
+    router.push("/become-crab")
   };
 
   return (
