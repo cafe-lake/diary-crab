@@ -1,5 +1,6 @@
 import express from "express";
 import type { Express, Request, Response } from "express";
+import cors from "cors";
 
 const app: Express = express();
 const PORT = 4000;
@@ -8,6 +9,7 @@ const auth = require("./routes/auth");
 const post = require("./routes/post");
 
 app.use(express.json());
+app.use(cors());
 app.use("/auth", auth);
 app.use("/posts", post);
 
