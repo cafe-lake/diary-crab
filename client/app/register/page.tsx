@@ -3,7 +3,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import axios from "axios";
-import { User } from "./userTypes";
+import { User } from "../_common/types/user";
 
 export default function Home() {
   const router = useRouter();
@@ -12,24 +12,25 @@ export default function Home() {
   const [password, setPassword] = useState("");
   const [passwordCheck, setPasswordCheck] = useState("");
 
-  const onClickSubmit = async() => {
-    // TODO: register処理(https://github.com/cafe-lake/diary-crab/issues/1)
+  const onClickSubmit = async () => {
     console.log("register処理開始");
-    const authStatus = await axios
-      .post<User>('http://localhost:4000/auth/register', {
+    const res = await axios
+      .post<User>("http://localhost:4000/auth/register", {
         userName: userName,
         loginId: loginId,
         password: password,
-        passwordConfirm: passwordCheck
+        passwordConfirm: passwordCheck,
       })
-      .then(() => console.log("ログイン成功"+userName))
+      .then(() => {
+        console.log("ログイン成功");
+        router.push("/become-crab");
+      })
       .catch((error) => {
         console.log("ログイン失敗");
-        console.log(error);
+        console.log(error.response.data.errors);
+        // TODO: error.response.data.errosが原因なので、ここでinvalidな入力フォームの下に赤い文字で原因を表示してあげる
+        return;
       });
-    console.log("authStatus: ", authStatus);
-    console.log(loginId);
-    router.push("/become-crab")
   };
 
   return (
