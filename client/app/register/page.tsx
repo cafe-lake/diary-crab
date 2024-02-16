@@ -1,13 +1,36 @@
 "use client";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
+import axios from "axios";
+import { User } from "../_common/types/user";
 
 export default function Home() {
   const router = useRouter();
-  const onClickSubmit = () => {
-    // TODO: register処理(https://github.com/cafe-lake/diary-crab/issues/1)
+  const [userName, setUserName] = useState("");
+  const [loginId, setLoginId] = useState("");
+  const [password, setPassword] = useState("");
+  const [passwordCheck, setPasswordCheck] = useState("");
+
+  const onClickSubmit = async () => {
     console.log("register処理開始");
-    router.push("/become-crab")
+    const res = await axios
+      .post<User>("http://localhost:4000/auth/register", {
+        userName: userName,
+        loginId: loginId,
+        password: password,
+        passwordConfirm: passwordCheck,
+      })
+      .then(() => {
+        console.log("ログイン成功");
+        router.push("/become-crab");
+      })
+      .catch((error) => {
+        console.log("ログイン失敗");
+        console.log(error.response.data.errors);
+        // TODO: error.response.data.errosが原因なので、ここでinvalidな入力フォームの下に赤い文字で原因を表示してあげる
+        return;
+      });
   };
 
   return (
@@ -26,6 +49,7 @@ export default function Home() {
               type="text"
               id="name"
               className="w-full px-3 py-2 border rounded-md focus:outline-none focus:border-blue-500"
+              onChange={(event) => setUserName(event.target.value)}
             />
           </div>
           <div className="mb-4">
@@ -39,6 +63,7 @@ export default function Home() {
               type="id"
               id="id"
               className="w-full px-3 py-2 border rounded-md focus:outline-none focus:border-blue-500"
+              onChange={(event) => setLoginId(event.target.value)}
             />
           </div>
           <div className="mb-4">
@@ -52,6 +77,7 @@ export default function Home() {
               type="password"
               id="password"
               className="w-full px-3 py-2 border rounded-md focus:outline-none focus:border-blue-500"
+              onChange={(event) => setPassword(event.target.value)}
             />
           </div>
           <div className="mb-4">
@@ -65,6 +91,7 @@ export default function Home() {
               type="password"
               id="password"
               className="w-full px-3 py-2 border rounded-md focus:outline-none focus:border-blue-500"
+              onChange={(event) => setPasswordCheck(event.target.value)}
             />
           </div>
           <button
