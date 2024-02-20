@@ -1,5 +1,10 @@
 "use client";
+import dynamic from 'next/dynamic';
 import { useRouter } from "next/navigation";
+
+const Canvas = dynamic(() => import('../../components/diary-canvas'), {
+  ssr: false,
+});
 
 export default function Home() {
   const router = useRouter();
@@ -12,8 +17,8 @@ export default function Home() {
   return (
     <main className="min-h-screen p-4 max-w-[800px] m-auto">
       <h2 className="text-2xl font-bold p-4 text-center">絵日記をかく</h2>
-      <div className="h-24">
-
+      <div>
+        <Canvas />
       </div>
       <div>
         <textarea className="w-full h-24"></textarea>
