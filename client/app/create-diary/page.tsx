@@ -34,15 +34,19 @@ export default function Home() {
     const formData = new FormData();
     formData.append("img", img);
     formData.append("text", text);
-    console.log(formData.get("text"));
-    // const res = await axios.post(`http://example.com/upload`, formData, {
-    //   headers: {
-    //     "content-type": "multipart/form-data",
-    //   },
-    // });
-    // if (res) {
-    //   router.push("/mypage");
-    // }
+
+    const res = await axios
+      .post("http://localhost:4000/posts", formData, {
+        headers: {
+          "content-type": "multipart/form-data",
+        },
+      })
+      .then(() => {
+        router.push("/mypage");
+      })
+      .catch((error) => {
+        return;
+      });
   };
 
   return (
