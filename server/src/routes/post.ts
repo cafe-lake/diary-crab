@@ -2,20 +2,29 @@ import { Router } from "express";
 import type { Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
 
-const checkAuth = require("../middleware/checkAuth");
+const { PutObjectCommand, S3Client } = require("@aws-sdk/client-s3");
+const { fromSSO } = require("@aws-sdk/credential-provider-sso");
 const multiparty = require("multiparty");
-const AWS = require("aws-sdk");
 const base64 = require("urlsafe-base64");
 
+const checkAuth = require("../middleware/checkAuth");
+
 const router = Router();
-const s3 = new AWS.S3();
 const prisma = new PrismaClient();
 
-const config = {
-  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-  region: process.env.AWS_REGION,
-};
+const credentials = fromSSO({
+  profile: process.env.AWS_PROFILE,
+  ssoStartUrl: process.env.AWS_SSO_START_URL,
+  ssoAccountId: process.env.AWS_ACCOUNT_ID,
+  ssoRegion: process.env.AWS_REGION,
+  ssoRoleName: process.env.AWS_SSO_ROLE_NAME,
+  ssoSession: process.env.AWS_SSO_SESSION,
+});
+
+const s3 = new S3Client({
+  region: process.env.AWS_S3_REGION,
+  credentials: credentials,
+});
 
 router.get("/public", (req: Request, res: Response) => {
   res.json();
@@ -50,29 +59,31 @@ router.post("/", (req: Request, res: Response) => {
       const decode_data = base64.decode(
         base64_data.replace("data:image/png;base64,", "")
       );
-      const params = {
+      const target_folder = process.env.S3_STORE_FOLDER;
+      const user = await prisma.user.findFirst();
+      if (!user) {
+        throw Error;
+      }
+      const now = new Date().getTime();
+      const filename = String(user.id) + "-" + String(now);
+      const command = new PutObjectCommand({
         Bucket: "diary-crab-pictures",
-        Key: `/ファイル名.png`,
+        Key: target_folder + filename,
         Body: decode_data,
         ContentType: "image/png",
-      };
-      s3.upload(params, async (err: any, data: any) => {
-        if (err) {
-          console.log("upload失敗");
-          console.log(err);
-          return;
-        }
-        const user = await prisma.user.findFirst();
-        if (!user) {
-          throw Error;
-        }
-        await prisma.post.create({
-          data: {
-            image_url: data.Location,
-            text: fields.text[0],
-            author_id: user.id,
-          },
-        });
+      });
+      await s3.send(command);
+      await prisma.post.create({
+        data: {
+          image_url:
+            "https://diary-crab-pictures.s3." +
+            process.env.AWS_S3_REGION +
+            ".amazonaws.com/" +
+            target_folder +
+            filename,
+          text: fields.text[0],
+          author_id: user.id,
+        },
       });
     });
   } catch {
