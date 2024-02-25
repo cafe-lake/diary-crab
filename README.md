@@ -8,6 +8,26 @@ git clone git@github.com:cafe-lake/diary-crab.git
 ```
 cp .env.example .env
 ```
+必要な情報はcafe-lakeに聞いてね
+
+### AWS設定
+ローカルからでもAWS S3に画像を保存できるように設定する。
+ホストマシンに```~/.aws/config```ができるのでそれをdocker内に入れる。
+2/25時点で↓記載するけど間違ってるかもなので適宜修正していく。
+
+#### 初期設定
+- aws cliをホストマシンにインストール
+  - https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html
+  - ターミナルでawsコマンドが使えるようになる
+- ターミナルで```aws configure sso```
+  - このコマンド打つと、質問事項聞かれるのでcafe-lakeに聞いてね
+- ターミナルで```aws sso login```
+  - 言われるがままに進んでログイン
+
+#### 開発時
+- ```aws sso login```
+  - 言われるがままに進んでログイン
+  - 開発中にセッション切れるとS3保存時にエラーになるのでこれやって再ログイン
 
 ### dockerコンテナ立ち上げ
 ```
