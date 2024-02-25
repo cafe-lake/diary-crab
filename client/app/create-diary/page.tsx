@@ -40,6 +40,7 @@ export default function Home() {
         headers: {
           "content-type": "multipart/form-data",
         },
+        withCredentials: true
       })
       .then(() => {
         router.push("/mypage");
