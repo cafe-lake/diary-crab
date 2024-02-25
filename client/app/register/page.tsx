@@ -15,19 +15,23 @@ export default function Home() {
   const onClickSubmit = async () => {
     console.log("register処理開始");
     const res = await axios
-      .post<User>("http://localhost:4000/auth/register", {
-        userName: userName,
-        loginId: loginId,
-        password: password,
-        passwordConfirm: passwordCheck,
-      })
+      .post<User>(
+        "http://localhost:4000/auth/register",
+        {
+          userName: userName,
+          loginId: loginId,
+          password: password,
+          passwordConfirm: passwordCheck,
+        },
+        { withCredentials: true }
+      )
       .then(() => {
         console.log("ログイン成功");
         router.push("/become-crab");
       })
       .catch((error) => {
         console.log("ログイン失敗");
-        console.log(error.response.data.errors);
+        console.log(error);
         // TODO: error.response.data.errosが原因なので、ここでinvalidな入力フォームの下に赤い文字で原因を表示してあげる
         return;
       });

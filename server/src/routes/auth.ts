@@ -63,7 +63,10 @@ router.post(
     );
 
     console.log(loginId, password);
-    // return res.send("auth ok");
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: false,
+    });
     return res.json({
       token: token,
     });
