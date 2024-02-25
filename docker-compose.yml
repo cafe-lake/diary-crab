@@ -19,6 +19,8 @@ services:
   server:
     container_name: server
     build: ./server
+    env_file:
+      - ./server/.env
     ports:
       - 4000:4000
       - 5555:5555
@@ -29,6 +31,7 @@ services:
     volumes:
       - ./server:/app
       - ./server/node_modules:/app/node_modules
+      # - ~/.aws:/root/.aws:ro
   db:
     container_name: db
     image: postgres:12
