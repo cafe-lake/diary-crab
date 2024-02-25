@@ -51,7 +51,7 @@ router.get("/public", (req: Request, res: Response) => {
 router.get("/private", checkAuth, (req: Request, res: Response) => {
   res.json();
 });
-router.post("/", (req: Request, res: Response) => {
+router.post("/", checkAuth, (req: Request, res: Response) => {
   try {
     let form = new multiparty.Form();
     form.parse(req, async function (err: any, fields: any, files: any) {
