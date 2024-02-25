@@ -11,7 +11,7 @@ cp .env.example .env
 
 ### dockerコンテナ立ち上げ
 ```
-docker-compose up
+docker compose -f docker-compose.yml -f docker-compose.local.yml up
 ```
 ### フロントエンドサーバー起動
 ```
