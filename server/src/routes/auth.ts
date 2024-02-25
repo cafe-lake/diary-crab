@@ -59,7 +59,7 @@ router.post(
         loginId,
       },
       "SECRET_KEY",
-      { expiresIn: 60 }
+      { expiresIn: "2h" }
     );
 
     console.log(loginId, password);
