@@ -65,12 +65,13 @@ router.post("/", checkAuth, (req: Request, res: Response) => {
         throw Error;
       }
       const now = new Date().getTime();
-      const filename = String(user.id) + "-" + String(now);
+      const filename = String(user.id) + "-" + String(now) + ".png";
       const command = new PutObjectCommand({
         Bucket: "diary-crab-pictures",
         Key: target_folder + filename,
         Body: decode_data,
         ContentType: "image/png",
+        ACL: "public-read"
       });
       await s3.send(command);
       await prisma.post.create({
