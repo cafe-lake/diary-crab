@@ -1,83 +1,60 @@
 "use client";
-import Link from "next/link";
-import axios from "axios";
-import { User } from "./_common/types/user";
+import Image from "next/image";
+import CrabImage from "./crab.jpg";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
 
 export default function Home() {
   const router = useRouter();
-  const [loginId, setLoginId] = useState("");
-  const [password, setPassword] = useState("");
-
-  const onClickSubmit = async () => {
-    const res = await axios
-      .post<User>(
-        "http://localhost:4000/auth/login",
-        {
-          loginId: loginId,
-          password: password,
-        },
-        { withCredentials: true }
-      )
-      .then(() => {
-        console.log("ログイン成功");
-        router.push("/mypage");
-      })
-      .catch((error) => {
-        console.log("ログイン失敗");
-        console.log(error);
-        // TODO: error.response.data.errosが原因なので、ここでinvalidな入力フォームの下に赤い文字で原因を表示してあげる
-        return;
-      });
-  };
+  const elements = Array.from({ length: 20 }, (_, index) => index + 1);
+  
+  const onClickCreateDiary = () => {
+    router.push("/create-diary");
+  }
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between">
-      <div className="flex flex-col items-center justify-center min-h-screen">
-        <h2 className="text-2xl font-bold mb-4">ログイン</h2>
-        <form className="w-full max-w-sm">
-          <div className="mb-4">
-            <label
-              htmlFor="email"
-              className="block text-gray-700 font-bold mb-2"
-            >
-              ログインID
-            </label>
-            <input
-              type="id"
-              id="id"
-              className="w-full px-3 py-2 border rounded-md focus:outline-none focus:border-blue-500"
-              onChange={(event) => setLoginId(event.target.value)}
-            />
+    <main className="min-h-screen p-4 max-w-[800px] m-auto">
+      <h2 className="text-2xl font-bold p-4 text-center">マイページ</h2>
+      <div className="flex">
+        <div>
+          <div className="flex justify-center">
+            <Image src={CrabImage} width={100} height={100} alt="crab" />
           </div>
-          <div className="mb-4">
-            <label
-              htmlFor="password"
-              className="block text-gray-700 font-bold mb-2"
-            >
-              パスワード
-            </label>
-            <input
-              type="password"
-              id="password"
-              className="w-full px-3 py-2 border rounded-md focus:outline-none focus:border-blue-500"
-              onChange={(event) => setPassword(event.target.value)}
-            />
-          </div>
-          <button
-            type="submit"
-            className="w-full bg-blue-500 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-            onClick={(e) => {
-              e.preventDefault();
-              onClickSubmit();
-            }}
-          >
-            ログイン
+          <div className="text-center">かにくぼカニ</div>
+        </div>
+        <div className="ml-2">
+          <button className="border border-solid border-gray-400 rounded bg-white p-1 mb-1" onClick={onClickCreateDiary}>
+            絵日記をかく
           </button>
-        </form>
-        <div className="mt-4">
-          <Link href="/register">まだカニでない方はこちらでカニになる</Link>
+          <button className="border border-solid border-gray-400 rounded bg-white p-1">
+            みんなの絵日記をよむ
+          </button>
+        </div>
+      </div>
+      <div className="mt-4">将来の夢：タカアシガニ</div>
+      <div className="flex mt-10 h-[50vw] bg-white">
+        <div className="w-full h-full relative border border-solid border-gray-400 border-b-0">
+          <Image src={CrabImage} layout="fill" objectFit="contain" alt="crab" />
+        </div>
+        <div className="w-full h-full relative border border-solid border-gray-400 border-b-0">
+          <Image src={CrabImage} layout="fill" objectFit="contain" alt="crab" />
+        </div>
+      </div>
+      <div className="flex h-[50vw] bg-white">
+        <div className="w-full h-full relative border border-solid border-gray-400 border-t-0 overflow-hidden">
+          <p className="h-6 border-b border-gray-400 mx-2">
+            2回目の投稿！星かと思って手にとったらヒトデでした☆
+          </p>
+          {elements.map((element) => (
+            <p key={element} className="h-6 border-b border-gray-400 mx-2"></p>
+          ))}
+        </div>
+        <div className="w-full h-full relative border border-solid border-gray-400 border-t-0 overflow-hidden">
+          <p className="h-6 border-b border-gray-400 mx-2">
+            初投稿！よろしくね
+          </p>
+          {elements.map((element) => (
+            <p key={element} className="h-6 border-b border-gray-400 mx-2"></p>
+          ))}
         </div>
       </div>
     </main>
