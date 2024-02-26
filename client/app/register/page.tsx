@@ -111,7 +111,7 @@ export default function Home() {
         </form>
         <div className="mt-4">
           <p>
-            <Link href="/">もうカニの方はログインへ</Link>
+            <Link href="/login">もうカニの方はログインへ</Link>
           </p>
         </div>
       </div>
