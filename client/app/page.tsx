@@ -1,7 +1,38 @@
-'use client'
+"use client";
 import Link from "next/link";
+import axios from "axios";
+import { User } from "./_common/types/user";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export default function Home() {
+  const router = useRouter();
+  const [loginId, setLoginId] = useState("");
+  const [password, setPassword] = useState("");
+
+  const onClickSubmit = async () => {
+    console.log("register処理開始");
+    const res = await axios
+      .post<User>(
+        "http://localhost:4000/auth/login",
+        {
+          loginId: loginId,
+          password: password,
+        },
+        { withCredentials: true }
+      )
+      .then(() => {
+        console.log("ログイン成功");
+        router.push("/mypage");
+      })
+      .catch((error) => {
+        console.log("ログイン失敗");
+        console.log(error);
+        // TODO: error.response.data.errosが原因なので、ここでinvalidな入力フォームの下に赤い文字で原因を表示してあげる
+        return;
+      });
+  };
+
   return (
     <main className="flex min-h-screen flex-col items-center justify-between">
       <div className="flex flex-col items-center justify-center min-h-screen">
@@ -18,6 +49,7 @@ export default function Home() {
               type="id"
               id="id"
               className="w-full px-3 py-2 border rounded-md focus:outline-none focus:border-blue-500"
+              onChange={(event) => setLoginId(event.target.value)}
             />
           </div>
           <div className="mb-4">
@@ -31,11 +63,16 @@ export default function Home() {
               type="password"
               id="password"
               className="w-full px-3 py-2 border rounded-md focus:outline-none focus:border-blue-500"
+              onChange={(event) => setPassword(event.target.value)}
             />
           </div>
           <button
             type="submit"
             className="w-full bg-blue-500 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            onClick={(e) => {
+              e.preventDefault();
+              onClickSubmit();
+            }}
           >
             ログイン
           </button>
