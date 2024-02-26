@@ -11,7 +11,6 @@ export default function Home() {
   const [password, setPassword] = useState("");
 
   const onClickSubmit = async () => {
-    console.log("register処理開始");
     const res = await axios
       .post<User>(
         "http://localhost:4000/auth/login",
