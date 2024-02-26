@@ -1,9 +1,15 @@
 import type { Request, Response, NextFunction } from "express";
 import { AuthenticatedRequest } from "../types/user";
+import { PrismaClient } from "@prisma/client";
 
 const JWT = require("jsonwebtoken");
+const prisma = new PrismaClient();
 
-module.exports = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+module.exports = async (
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction
+) => {
   //トークン認証(トークンを持っているクライアントならプライベート記事が見れる)
   const { token } = req.cookies;
 
@@ -18,10 +24,21 @@ module.exports = async (req: AuthenticatedRequest, res: Response, next: NextFunc
   }
 
   try {
-    let user = await JWT.verify(token, "SECRET_KEY");
-    req.user = user;
+    const data = await JWT.verify(token, "SECRET_KEY");
+    const user = await prisma.user.findUnique({
+      where: {
+        login_id: data.loginId,
+      },
+      select: {
+        id: true,
+      },
+    });
+    if (!user) {
+      throw Error;
+    }
+    req.user_id = user.id;
     console.log(req);
-    console.log(user.loginId);
+    console.log(user.id);
     next();
   } catch {
     return res.status(400).json({

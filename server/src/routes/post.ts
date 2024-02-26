@@ -1,6 +1,8 @@
 import { Router } from "express";
 import type { Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
+import { AuthenticatedRequest } from "../types/user";
+import { Post } from "../types/post";
 
 const { PutObjectCommand, S3Client } = require("@aws-sdk/client-s3");
 const { fromSSO } = require("@aws-sdk/credential-provider-sso");
@@ -51,40 +53,47 @@ router.get("/public", (req: Request, res: Response) => {
 router.get("/private", checkAuth, (req: Request, res: Response) => {
   res.json();
 });
-router.post("/", checkAuth, (req: Request, res: Response) => {
+
+router.post("/", checkAuth, (req: AuthenticatedRequest, res: Response) => {
   try {
     let form = new multiparty.Form();
     form.parse(req, async function (err: any, fields: any, files: any) {
+      if (!req.user_id) {
+        throw Error;
+      }
+      // 画像処理
+      console.log(fields);
       const base64_data = fields.img[0];
       const decode_data = base64.decode(
         base64_data.replace("data:image/png;base64,", "")
       );
+
+      // AWS S3処理
       const target_folder = process.env.S3_STORE_FOLDER;
-      const user = await prisma.user.findFirst();
-      if (!user) {
-        throw Error;
-      }
       const now = new Date().getTime();
-      const filename = String(user.id) + "-" + String(now) + ".png";
+      const filename = String(req.user_id) + "-" + String(now) + ".png";
       const command = new PutObjectCommand({
         Bucket: "diary-crab-pictures",
         Key: target_folder + filename,
         Body: decode_data,
         ContentType: "image/png",
-        ACL: "public-read"
+        ACL: "public-read",
       });
       await s3.send(command);
+
+      // 投稿を保存
+      const new_post: Post = {
+        image_url:
+          "https://diary-crab-pictures.s3." +
+          process.env.AWS_S3_REGION +
+          ".amazonaws.com/" +
+          target_folder +
+          filename,
+        text: fields.text[0],
+        author_id: req.user_id,
+      };
       await prisma.post.create({
-        data: {
-          image_url:
-            "https://diary-crab-pictures.s3." +
-            process.env.AWS_S3_REGION +
-            ".amazonaws.com/" +
-            target_folder +
-            filename,
-          text: fields.text[0],
-          author_id: user.id,
-        },
+        data: new_post,
       });
     });
   } catch {
