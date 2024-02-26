@@ -43,7 +43,7 @@ export default function Home() {
         withCredentials: true
       })
       .then(() => {
-        router.push("/mypage");
+        router.push("/");
       })
       .catch((error) => {
         return;
