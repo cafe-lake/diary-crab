@@ -106,8 +106,13 @@ router.post("/login", async (req: Request, res: Response) => {
       loginId,
     },
     "SECRET_KEY",
-    { expiresIn: 60 }
+    { expiresIn: "365d" }
   );
+
+  res.cookie("token", token, {
+    httpOnly: true,
+    secure: false,
+  });
 
   return res.json({
     token: token,
