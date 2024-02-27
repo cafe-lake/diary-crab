@@ -54,6 +54,25 @@ router.get("/private", checkAuth, (req: Request, res: Response) => {
   res.json();
 });
 
+router.get("/", checkAuth, async (req: AuthenticatedRequest, res: Response) => {
+  if (!req.user_id) {
+    res.status(404).json();
+  }
+  const current_page = Number(req.query.current_page);
+  const posts = await prisma.post.findMany({
+    skip: 2 * current_page - 2,
+    take: 2,
+    where: {
+      author_id: req.user_id,
+    },
+    select: {
+      image_url: true,
+      text: true,
+    },
+  });
+  res.json({ posts: posts });
+});
+
 router.post("/", checkAuth, (req: AuthenticatedRequest, res: Response) => {
   try {
     let form = new multiparty.Form();

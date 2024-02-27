@@ -1,15 +1,53 @@
 "use client";
+
+import axios from "axios";
 import Image from "next/image";
 import CrabImage from "./crab.jpg";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export default function Home() {
   const router = useRouter();
   const elements = Array.from({ length: 20 }, (_, index) => index + 1);
-  
+
+  const [userInfo, setUserInfo] = useState(null);
+  const [userPosts, setUserPosts] = useState(null);
+
+  useEffect(() => {
+    // useEffectの処理2回走る問題はreact公式が言ってたやり方で対応(内容は知らん)
+    return () => {
+      axios
+        .get("http://localhost:4000/users/my-info", { withCredentials: true })
+        .then((data: any) => {
+          setUserInfo(data);
+          console.log("user:", data);
+        })
+        .catch((err) => {
+          console.log(err);
+          router.push("/login");
+        });
+
+      // TODO: ローカルストレージからページナンバーとって変数に代入(とりあえず今は1)。
+      let current_page = 1;
+
+      axios
+        .get("http://localhost:4000/posts?current_page=" + current_page, {
+          withCredentials: true,
+        })
+        .then((data: any) => {
+          setUserPosts(data);
+          console.log("posts:", data);
+        })
+        .catch((err) => {
+          console.log(err);
+          router.push("/login");
+        });
+    };
+  }, []);
+
   const onClickCreateDiary = () => {
     router.push("/create-diary");
-  }
+  };
 
   return (
     <main className="min-h-screen p-4 max-w-[800px] m-auto">
@@ -22,7 +60,10 @@ export default function Home() {
           <div className="text-center">かにくぼカニ</div>
         </div>
         <div className="ml-2">
-          <button className="border border-solid border-gray-400 rounded bg-white p-1 mb-1" onClick={onClickCreateDiary}>
+          <button
+            className="border border-solid border-gray-400 rounded bg-white p-1 mb-1"
+            onClick={onClickCreateDiary}
+          >
             絵日記をかく
           </button>
           <button className="border border-solid border-gray-400 rounded bg-white p-1">
