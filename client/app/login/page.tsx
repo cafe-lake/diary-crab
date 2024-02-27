@@ -22,7 +22,7 @@ export default function Home() {
       )
       .then(() => {
         console.log("ログイン成功");
-        router.push("/mypage");
+        router.push("/");
       })
       .catch((error) => {
         console.log("ログイン失敗");
