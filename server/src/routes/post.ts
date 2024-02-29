@@ -65,6 +65,9 @@ router.get("/", checkAuth, async (req: AuthenticatedRequest, res: Response) => {
     where: {
       author_id: req.user_id,
     },
+    orderBy: {
+      created_at: 'asc',
+    },
     select: {
       image_url: true,
       text: true,
