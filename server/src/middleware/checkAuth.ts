@@ -14,7 +14,7 @@ module.exports = async (
   const { token } = req.cookies;
 
   if (!token) {
-    return res.status(400).json({
+    return res.status(401).json({
       errors: [
         {
           msg: "トークンが見つかりません",
@@ -41,7 +41,7 @@ module.exports = async (
     console.log(user.id);
     next();
   } catch {
-    return res.status(400).json({
+    return res.status(401).json({
       errors: [
         {
           msg: "トークンが一致しません",
