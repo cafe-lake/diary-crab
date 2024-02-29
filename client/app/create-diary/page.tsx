@@ -46,6 +46,11 @@ export default function Home() {
         router.push("/");
       })
       .catch((error) => {
+        if (error.response.status == 401) {
+          router.push("/login");
+        } else {
+          alert("ネットワークエラー。。すこし待ってもういっかい！");
+        }
         return;
       });
   };

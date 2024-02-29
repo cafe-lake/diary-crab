@@ -23,8 +23,11 @@ export default function Home() {
           console.log("user:", data);
         })
         .catch((err) => {
-          console.log(err);
-          router.push("/login");
+          if (err.response.status == 401) {
+            router.push("/login");
+          } else {
+            alert("ネットワークエラー。。すこし待ってもういっかい！");
+          }
         });
 
       // TODO: ローカルストレージからページナンバーとって変数に代入(とりあえず今は1)。
@@ -39,8 +42,11 @@ export default function Home() {
           console.log("posts:", data);
         })
         .catch((err) => {
-          console.log(err);
-          router.push("/login");
+          if (err.response.status == 401) {
+            router.push("/login");
+          } else {
+            alert("ネットワークエラー。。すこし待ってもういっかい！");
+          }
         });
     };
   }, []);
