@@ -1,17 +1,17 @@
 "use client";
 
+import { useState } from "react";
 import { Stage, Layer, Image } from "react-konva";
 import useImage from "use-image";
+import ItemImage from "./item-image";
+import { CanvasItemOption } from "@/app/_common/types/item";
 
-export default function Canvas(props: any) {
+const Canvas = (props: any) => {
   const [crab] = useImage(
     "https://4.bp.blogspot.com/-sdhuHWjgfCo/UYOsrFBf5RI/AAAAAAAARKs/THaabR1hDq4/s600/umi_kani.png",
     "anonymous"
   );
-  const [grocery] = useImage(
-    "https://3.bp.blogspot.com/-6T6YOr6aUck/UdEenstrOOI/AAAAAAAAVzw/GCMNx0MKMGI/s718/yaoya.png",
-    "anonymous"
-  );
+
   return (
     <Stage
       width={props.dimensions.width}
@@ -27,14 +27,12 @@ export default function Canvas(props: any) {
           width={100}
           height={100}
         ></Image>
-        <Image
-          alt="draw a picture!"
-          image={grocery}
-          draggable
-          width={100}
-          height={100}
-        ></Image>
+        {props.selectedItems.map((item: CanvasItemOption, index: number) => (
+          <ItemImage key={index} image={item.url} />
+        ))}
       </Layer>
     </Stage>
   );
-}
+};
+
+export default Canvas;

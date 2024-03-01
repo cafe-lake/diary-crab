@@ -4,6 +4,8 @@ import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import Konva from "konva";
 import axios from "axios";
+import CanvasItemSelectBox from "@/components/canvas-item-select-box";
+import { CanvasItemOption } from "@/app/_common/types/item";
 
 const Canvas = dynamic(() => import("../../components/diary-canvas"), {
   ssr: false,
@@ -17,6 +19,24 @@ export default function Home() {
     width: 0,
     height: 0,
   });
+  const [selectedItems, setSelectedItems] = useState<CanvasItemOption[]>([]);
+  const [options, setOptions] = useState<CanvasItemOption[]>([
+    {
+      id: 1,
+      label: "アイテム1",
+      url: "https://3.bp.blogspot.com/-6T6YOr6aUck/UdEenstrOOI/AAAAAAAAVzw/GCMNx0MKMGI/s718/yaoya.png",
+    },
+    {
+      id: 2,
+      label: "アイテム2",
+      url: "https://3.bp.blogspot.com/-6T6YOr6aUck/UdEenstrOOI/AAAAAAAAVzw/GCMNx0MKMGI/s718/yaoya.png",
+    },
+    {
+      id: 3,
+      label: "アイテム3",
+      url: "https://3.bp.blogspot.com/-6T6YOr6aUck/UdEenstrOOI/AAAAAAAAVzw/GCMNx0MKMGI/s718/yaoya.png",
+    },
+  ]);
   const [text, setText] = useState("");
 
   useEffect(() => {
@@ -28,7 +48,15 @@ export default function Home() {
     }
   }, []);
 
-  const onClickConfirm = async () => {
+  /**
+   * 追加する絵を選択した
+   * @param option
+   */
+  const handleSelect = (option: CanvasItemOption) => {
+    setSelectedItems([...selectedItems, option]);
+  };
+
+  const onClickSubmit = async () => {
     if (!stageRef.current) return;
     const img = await stageRef.current.toDataURL();
     const formData = new FormData();
@@ -40,7 +68,7 @@ export default function Home() {
         headers: {
           "content-type": "multipart/form-data",
         },
-        withCredentials: true
+        withCredentials: true,
       })
       .then(() => {
         router.push("/");
@@ -59,7 +87,14 @@ export default function Home() {
     <main className="min-h-screen p-4 max-w-[800px] m-auto">
       <h2 className="text-2xl font-bold p-4 text-center">絵日記をかく</h2>
       <div className="w-full h-[40vh]" ref={divRef}>
-        <Canvas dimensions={dimensions} stageRef={stageRef} />
+        <Canvas
+          dimensions={dimensions}
+          stageRef={stageRef}
+          selectedItems={selectedItems}
+        />
+      </div>
+      <div>
+        <CanvasItemSelectBox options={options} onSelect={handleSelect} />
       </div>
       <div className="mt-4">
         <textarea
@@ -70,9 +105,9 @@ export default function Home() {
       <div className="text-center">
         <button
           className="border border-solid border-gray-400 rounded bg-white p-1 mb-1 m-auto"
-          onClick={onClickConfirm}
+          onClick={onClickSubmit}
         >
-          かくにん
+          かきおわった
         </button>
       </div>
     </main>
