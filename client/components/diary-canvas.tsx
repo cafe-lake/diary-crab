@@ -20,13 +20,7 @@ const Canvas = (props: any) => {
       ref={props.stageRef}
     >
       <Layer>
-        <Image
-          alt="draw a picture!"
-          image={crab}
-          draggable
-          width={100}
-          height={100}
-        ></Image>
+        <ItemImage image={props.me.crab.image_url} />
         {props.selectedItems.map((item: CanvasItemOption, index: number) => (
           <ItemImage key={index} image={item.url} />
         ))}

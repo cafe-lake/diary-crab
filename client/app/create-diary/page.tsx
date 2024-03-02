@@ -15,37 +15,50 @@ export default function Home() {
   const router = useRouter();
   const divRef = useRef<HTMLInputElement>(null);
   const stageRef = useRef<Konva.Stage>(null);
+  const [userInfo, setUserInfo] = useState(null);
   const [dimensions, setDimensions] = useState({
     width: 0,
     height: 0,
   });
   const [selectedItems, setSelectedItems] = useState<CanvasItemOption[]>([]);
-  const [options, setOptions] = useState<CanvasItemOption[]>([
-    {
-      id: 1,
-      label: "アイテム1",
-      url: "https://3.bp.blogspot.com/-6T6YOr6aUck/UdEenstrOOI/AAAAAAAAVzw/GCMNx0MKMGI/s718/yaoya.png",
-    },
-    {
-      id: 2,
-      label: "アイテム2",
-      url: "https://3.bp.blogspot.com/-6T6YOr6aUck/UdEenstrOOI/AAAAAAAAVzw/GCMNx0MKMGI/s718/yaoya.png",
-    },
-    {
-      id: 3,
-      label: "アイテム3",
-      url: "https://3.bp.blogspot.com/-6T6YOr6aUck/UdEenstrOOI/AAAAAAAAVzw/GCMNx0MKMGI/s718/yaoya.png",
-    },
-  ]);
+  const [options, setOptions] = useState<CanvasItemOption[] | null>(null);
   const [text, setText] = useState("");
 
   useEffect(() => {
-    if (divRef.current?.offsetHeight && divRef.current?.offsetWidth) {
-      setDimensions({
-        width: divRef.current.offsetWidth,
-        height: divRef.current.offsetHeight,
-      });
-    }
+    return () => {
+      axios
+        .get("http://localhost:4000/users/my-info", { withCredentials: true })
+        .then((data: any) => {
+          setUserInfo(data.data.user);
+          console.log("user:", data.data.user);
+        })
+        .catch((err) => {
+          if (err.response.status == 401) {
+            router.push("/login");
+          } else {
+            alert("ネットワークエラー。。すこし待ってもういっかい！");
+          }
+        });
+      axios
+        .get("http://localhost:4000/canvas-items", { withCredentials: true })
+        .then((data: any) => {
+          setOptions(data.data.canvas_items);
+          console.log("canvas_items:", data.data.canvas_items);
+        })
+        .catch((err) => {
+          if (err.response.status == 401) {
+            router.push("/login");
+          } else {
+            alert("ネットワークエラー。。すこし待ってもういっかい！");
+          }
+        });
+      if (divRef.current?.offsetHeight && divRef.current?.offsetWidth) {
+        setDimensions({
+          width: divRef.current.offsetWidth,
+          height: divRef.current.offsetHeight,
+        });
+      }
+    };
   }, []);
 
   /**
@@ -87,14 +100,19 @@ export default function Home() {
     <main className="min-h-screen p-4 max-w-[800px] m-auto">
       <h2 className="text-2xl font-bold p-4 text-center">絵日記をかく</h2>
       <div className="w-full h-[40vh]" ref={divRef}>
-        <Canvas
-          dimensions={dimensions}
-          stageRef={stageRef}
-          selectedItems={selectedItems}
-        />
+        {userInfo && (
+          <Canvas
+            me={userInfo}
+            dimensions={dimensions}
+            stageRef={stageRef}
+            selectedItems={selectedItems}
+          />
+        )}
       </div>
       <div>
-        <CanvasItemSelectBox options={options} onSelect={handleSelect} />
+        {options && (
+          <CanvasItemSelectBox options={options} onSelect={handleSelect} />
+        )}
       </div>
       <div className="mt-4">
         <textarea
