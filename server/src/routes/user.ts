@@ -22,7 +22,7 @@ router.get(
       select: {
         id: true,
         name: true,
-        profile_img_url: true,
+        crab: true,
       },
     });
     res.json({ user: user });

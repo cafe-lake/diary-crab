@@ -49,7 +49,7 @@ router.post(
         name: userName,
         login_id: loginId,
         password: hashedPassword,
-        profile_img_url: "../crab.jpg", // TODO: s3のurlにする
+        crab_id: 1,
       },
     });
 
