@@ -52,7 +52,7 @@ model Crab {
 
 model CanvasItem {
   id            Int    @id @default(autoincrement())
-  label          String
-  url     String
+  label         String
+  url           String
   display_order Int    @default(1)
 }
