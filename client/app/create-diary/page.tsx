@@ -26,8 +26,9 @@ export default function Home() {
 
   useEffect(() => {
     return () => {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL;
       axios
-        .get("http://localhost:4000/users/my-info", { withCredentials: true })
+        .get(apiUrl + "/users/my-info", { withCredentials: true })
         .then((data: any) => {
           setUserInfo(data.data.user);
           console.log("user:", data.data.user);
@@ -40,7 +41,7 @@ export default function Home() {
           }
         });
       axios
-        .get("http://localhost:4000/canvas-items", { withCredentials: true })
+        .get(apiUrl + "/canvas-items", { withCredentials: true })
         .then((data: any) => {
           setOptions(data.data.canvas_items);
           console.log("canvas_items:", data.data.canvas_items);
@@ -75,9 +76,9 @@ export default function Home() {
     const formData = new FormData();
     formData.append("img", img);
     formData.append("text", text);
-
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL;
     const res = await axios
-      .post("http://localhost:4000/posts", formData, {
+      .post(apiUrl + "/posts", formData, {
         headers: {
           "content-type": "multipart/form-data",
         },

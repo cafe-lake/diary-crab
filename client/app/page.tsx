@@ -16,8 +16,9 @@ export default function Home() {
   useEffect(() => {
     // useEffectの処理2回走る問題はreact公式が言ってたやり方で対応(内容は知らん)
     return () => {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL;
       axios
-        .get("http://localhost:4000/users/my-info", { withCredentials: true })
+        .get(apiUrl + "/users/my-info", { withCredentials: true })
         .then((data: any) => {
           setUserInfo(data);
           console.log("user:", data);
@@ -34,7 +35,7 @@ export default function Home() {
       let current_page = 1;
 
       axios
-        .get("http://localhost:4000/posts?current_page=" + current_page, {
+        .get(apiUrl + "/posts?current_page=" + current_page, {
           withCredentials: true,
         })
         .then((data: any) => {

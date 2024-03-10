@@ -14,9 +14,10 @@ export default function Home() {
   const [showModal, setShowModal] = useState(false);
 
   const onClickSubmit = async () => {
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL;
     const res = await axios
       .post<User>(
-        "http://localhost:4000/auth/login",
+        apiUrl + "/auth/login",
         {
           loginId: loginId,
           password: password,

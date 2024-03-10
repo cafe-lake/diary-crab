@@ -14,9 +14,10 @@ export default function Home() {
 
   const onClickSubmit = async () => {
     console.log("register処理開始");
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL;
     const res = await axios
       .post<User>(
-        "http://localhost:4000/auth/register",
+        apiUrl + "/auth/register",
         {
           userName: userName,
           loginId: loginId,
