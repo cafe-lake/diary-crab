@@ -1,4 +1,0 @@
-services:
-  server:
-    volumes:
-      - ~/.aws:/root/.aws:ro
