@@ -85,7 +85,7 @@ Resources:
             Resource: !Sub ${ diarycrabs3devBucket.Arn}
 
 Outputs:
-  diarycrabs3devName:
+  diarycrabs3Name:
     Description: "The name of a user-defined bucket."
     Value: !Ref diarycrabs3devBucket
   diarycrabs3devAccessPolicy:
