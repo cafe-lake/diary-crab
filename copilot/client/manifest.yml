@@ -22,7 +22,7 @@ http:
 #     interval: 10s
 #     timeout: 5s
   alias: diary-crab-dev.com
-  hosted_zone: Z026430121RLK5QIXYWOY
+  hosted_zone: Z10126423SMRN0KW3176S
 
 # Number of CPU units for the task.
 cpu: 1024
