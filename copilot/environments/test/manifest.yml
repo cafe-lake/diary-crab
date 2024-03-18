@@ -14,8 +14,7 @@ type: Environment
 # Configure the load balancers in your environment, once created.
 http:
   public:
-    certificates:
-      - [arn:aws:acm:ap-northeast-1:791880203694:certificate/4c44931d-1efb-4636-99a0-ec231a9d3fcd, arn:aws:acm:ap-northeast-1:791880203694:certificate/e8a99aab-8512-44d7-a301-717a8ca75547]
+    certificates: [arn:aws:acm:ap-northeast-1:791880203694:certificate/4c44931d-1efb-4636-99a0-ec231a9d3fcd, arn:aws:acm:ap-northeast-1:791880203694:certificate/e8a99aab-8512-44d7-a301-717a8ca75547]
 #   private:
 
 # Configure observability for your environment resources.
