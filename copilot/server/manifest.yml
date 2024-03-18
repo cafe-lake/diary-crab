@@ -22,7 +22,7 @@ http:
     timeout: 10s
     grace_period: 60s
   alias: api.diary-crab-dev.com
-  hosted_zone: Z10126423SMRN0KW3176S
+  hosted_zone: Z026430121RLK5QIXYWOY
 
 # Configuration for your containers and service.
 image:
