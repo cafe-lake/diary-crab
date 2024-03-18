@@ -14,13 +14,15 @@ image:
   # Port exposed through your container to route traffic to it.
   port: 3000
 
-# http:
+http:
 #   healthcheck:
 #     path: /
 #     healthy_threshold: 3
 #     unhealthy_threshold: 5
 #     interval: 10s
 #     timeout: 5s
+  alias: diary-crab-dev.com
+  hosted_zone: Z026430121RLK5QIXYWOY
 
 # Number of CPU units for the task.
 cpu: 1024
