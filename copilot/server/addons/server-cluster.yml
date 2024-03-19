@@ -94,7 +94,7 @@ Resources:
         !Join [ "",  [ '{{resolve:secretsmanager:', !Ref serverclusterAuroraSecret, ":SecretString:password}}" ]]
       DatabaseName: !Ref serverclusterDBName
       Engine: 'aurora-postgresql'
-      EngineVersion: '14.4'
+      EngineVersion: '14.8'
       DBClusterParameterGroupName: !Ref serverclusterDBClusterParameterGroup
       DBSubnetGroupName: !Ref serverclusterDBSubnetGroup
       Port: 5432
