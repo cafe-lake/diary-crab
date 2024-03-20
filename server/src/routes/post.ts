@@ -66,7 +66,7 @@ router.get("/", checkAuth, async (req: AuthenticatedRequest, res: Response) => {
       author_id: req.user_id,
     },
     orderBy: {
-      created_at: 'asc',
+      created_at: "asc",
     },
     select: {
       image_url: true,
@@ -91,12 +91,11 @@ router.post("/", checkAuth, (req: AuthenticatedRequest, res: Response) => {
       );
 
       // AWS S3処理
-      const target_folder = process.env.S3_STORE_FOLDER;
       const now = new Date().getTime();
       const filename = String(req.user_id) + "-" + String(now) + ".png";
       const command = new PutObjectCommand({
         Bucket: "diary-crab-pictures",
-        Key: target_folder + filename,
+        Key: "posts/" + filename,
         Body: decode_data,
         ContentType: "image/png",
         ACL: "public-read",
@@ -106,10 +105,11 @@ router.post("/", checkAuth, (req: AuthenticatedRequest, res: Response) => {
       // 投稿を保存
       const new_post: Post = {
         image_url:
-          "https://diary-crab-pictures.s3." +
+          "https://" +
+          process.env.DIARYCRABS3_NAME +
+          ".s3." +
           process.env.AWS_S3_REGION +
-          ".amazonaws.com/" +
-          target_folder +
+          ".amazonaws.com/posts/" +
           filename,
         text: fields.text[0],
         author_id: req.user_id,
