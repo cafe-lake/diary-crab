@@ -9,6 +9,7 @@ const bcrypt = require("bcrypt");
 const JWT = require("jsonwebtoken");
 
 router.get("/", (req: Request, res: Response) => {
+  console.log("hogehoge");
   res.send("auth is working");
 });
 
