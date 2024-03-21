@@ -76,10 +76,10 @@ router.get("/", checkAuth, async (req: AuthenticatedRequest, res: Response) => {
   res.json({ posts: posts });
 });
 
-router.post("/", checkAuth, (req: AuthenticatedRequest, res: Response) => {
+router.post("/", checkAuth, async (req: AuthenticatedRequest, res: Response) => {
   try {
     let form = new multiparty.Form();
-    form.parse(req, async function (err: any, fields: any, files: any) {
+    await form.parse(req, async function (err: any, fields: any, files: any) {
       if (!req.user_id) {
         throw Error;
       }
@@ -118,12 +118,13 @@ router.post("/", checkAuth, (req: AuthenticatedRequest, res: Response) => {
         data: new_post,
       });
     });
-  } catch {
+    res.json();
+  } catch (err) {
     res.status(400).json({
       msg: "エラー",
+      err: String(err)
     });
   }
-  res.json();
 });
 
 module.exports = router;
