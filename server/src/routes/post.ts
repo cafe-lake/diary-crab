@@ -24,7 +24,7 @@ const credentials = fromSSO({
 });
 
 const s3 = new S3Client({
-  region: process.env.AWS_S3_REGION,
+  region: "ap-northeast-1",
   credentials: credentials,
 });
 
@@ -76,55 +76,50 @@ router.get("/", checkAuth, async (req: AuthenticatedRequest, res: Response) => {
   res.json({ posts: posts });
 });
 
-router.post("/", checkAuth, async (req: AuthenticatedRequest, res: Response) => {
-  try {
-    let form = new multiparty.Form();
-    await form.parse(req, async function (err: any, fields: any, files: any) {
-      if (!req.user_id) {
-        throw Error;
-      }
-      // 画像処理
-      console.log(fields);
-      const base64_data = fields.img[0];
-      const decode_data = base64.decode(
-        base64_data.replace("data:image/png;base64,", "")
-      );
+router.post("/", checkAuth, (req: AuthenticatedRequest, res: Response) => {
+  let form = new multiparty.Form();
+  form.parse(req, async function (err: any, fields: any, files: any) {
+    if (!req.user_id) {
+      throw Error;
+    }
+    // 画像処理
+    const base64_data = fields.img[0];
+    const decode_data = base64.decode(
+      base64_data.replace("data:image/png;base64,", "")
+    );
 
-      // AWS S3処理
-      const now = new Date().getTime();
-      const filename = String(req.user_id) + "-" + String(now) + ".png";
-      const command = new PutObjectCommand({
-        Bucket: "diary-crab-pictures",
-        Key: "posts/" + filename,
-        Body: decode_data,
-        ContentType: "image/png",
-        ACL: "public-read",
-      });
+    // AWS S3処理
+    const now = new Date().getTime();
+    const filename = String(req.user_id) + "-" + String(now) + ".png";
+    const command = new PutObjectCommand({
+      Bucket: "diary-crab-pictures",
+      Key: "posts/" + filename,
+      Body: decode_data,
+      ContentType: "image/png",
+      ACL: "public-read",
+    });
+
+    try {
       await s3.send(command);
+    } catch (error) {
+      res.status(500).json({ error: String(error) });
+    }
 
-      // 投稿を保存
-      const new_post: Post = {
-        image_url:
-          "https://" +
-          process.env.DIARYCRABS3_NAME +
-          ".s3." +
-          process.env.AWS_S3_REGION +
-          ".amazonaws.com/posts/" +
-          filename,
-        text: fields.text[0],
-        author_id: req.user_id,
-      };
-      await prisma.post.create({
-        data: new_post,
-      });
+    // 投稿を保存
+    const new_post: Post = {
+      image_url:
+        "https://" +
+        process.env.DIARYCRABS3_NAME +
+        ".s3.ap-northeast-1.amazonaws.com/posts/" +
+        filename,
+      text: fields.text[0],
+      author_id: req.user_id,
+    };
+    await prisma.post.create({
+      data: new_post,
     });
     res.json();
-  } catch (err) {
-    res.status(400).json({
-      msg: "エラー",
-      err: String(err)
-    });
-  }
+  });
 });
 
 module.exports = router;

@@ -91,6 +91,7 @@ export default function Home() {
         if (error.response.status == 401) {
           router.push("/login");
         } else {
+          console.log(error);
           alert("ネットワークエラー。。すこし待ってもういっかい！");
         }
         return;
