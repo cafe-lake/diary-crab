@@ -4,6 +4,8 @@ import { PrismaClient } from "@prisma/client";
 import { AuthenticatedRequest } from "../types/user";
 import { Post } from "../types/post";
 
+import { fromContainerMetadata } from "@aws-sdk/credential-providers";
+
 const { PutObjectCommand, S3Client } = require("@aws-sdk/client-s3");
 const { fromSSO } = require("@aws-sdk/credential-provider-sso");
 const multiparty = require("multiparty");
@@ -14,14 +16,24 @@ const checkAuth = require("../middleware/checkAuth");
 const router = Router();
 const prisma = new PrismaClient();
 
-const credentials = fromSSO({
-  profile: process.env.AWS_PROFILE,
-  ssoStartUrl: process.env.AWS_SSO_START_URL,
-  ssoAccountId: process.env.AWS_ACCOUNT_ID,
-  ssoRegion: process.env.AWS_REGION,
-  ssoRoleName: process.env.AWS_SSO_ROLE_NAME,
-  ssoSession: process.env.AWS_SSO_SESSION,
-});
+if (process.env.NODE_ENV == "local") {
+}
+
+const credentials = () => {
+  switch (process.env.NODE_ENV) {
+    case "local":
+      return fromSSO({
+        profile: process.env.AWS_PROFILE,
+        ssoStartUrl: process.env.AWS_SSO_START_URL,
+        ssoAccountId: process.env.AWS_ACCOUNT_ID,
+        ssoRegion: process.env.AWS_REGION,
+        ssoRoleName: process.env.AWS_SSO_ROLE_NAME,
+        ssoSession: process.env.AWS_SSO_SESSION,
+      });
+    case "develop":
+      return fromContainerMetadata();
+  }
+};
 
 const s3 = new S3Client({
   region: "ap-northeast-1",
