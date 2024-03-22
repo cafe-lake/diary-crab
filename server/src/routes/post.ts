@@ -104,7 +104,7 @@ router.post("/", checkAuth, (req: AuthenticatedRequest, res: Response) => {
     const now = new Date().getTime();
     const filename = String(req.user_id) + "-" + String(now) + ".png";
     const command = new PutObjectCommand({
-      Bucket: "diary-crab-pictures",
+      Bucket: process.env.DIARYCRABS3_NAME,
       Key: "posts/" + filename,
       Body: decode_data,
       ContentType: "image/png",
@@ -115,6 +115,7 @@ router.post("/", checkAuth, (req: AuthenticatedRequest, res: Response) => {
       await s3.send(command);
     } catch (error) {
       res.status(500).json({ error: String(error) });
+      return;
     }
 
     // 投稿を保存
