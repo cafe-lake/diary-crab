@@ -16,9 +16,6 @@ const checkAuth = require("../middleware/checkAuth");
 const router = Router();
 const prisma = new PrismaClient();
 
-if (process.env.NODE_ENV == "local") {
-}
-
 const credentials = () => {
   switch (process.env.NODE_ENV) {
     case "local":
