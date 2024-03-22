@@ -28,7 +28,7 @@ const credentials = () => {
         ssoSession: process.env.AWS_SSO_SESSION,
       });
     case "develop":
-      return fromSSO();
+      return null;
   }
 };
 
