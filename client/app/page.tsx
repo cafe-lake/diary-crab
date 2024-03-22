@@ -5,13 +5,15 @@ import Image from "next/image";
 import CrabImage from "./crab.jpg";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { UserPost } from "./_common/types/user";
 
 export default function Home() {
   const router = useRouter();
   const elements = Array.from({ length: 20 }, (_, index) => index + 1);
 
   const [userInfo, setUserInfo] = useState(null);
-  const [userPosts, setUserPosts] = useState(null);
+  const [userPosts, setUserPosts] = useState<UserPost[]>([]);
+  const [pageNumber, setPageNumber] = useState(1);
 
   useEffect(() => {
     // useEffectの処理2回走る問題はreact公式が言ってたやり方で対応(内容は知らん)
@@ -32,15 +34,20 @@ export default function Home() {
         });
 
       // TODO: ローカルストレージからページナンバーとって変数に代入(とりあえず今は1)。
-      let current_page = 1;
+      let current_page: number = 1;
+      if (localStorage.getItem("currentPage") === null) {
+        localStorage.setItem("currentPage", String(current_page));
+      } else {
+        current_page = Number(localStorage.getItem("currentPage"));
+      }
 
       axios
         .get(apiUrl + "/posts?current_page=" + current_page, {
           withCredentials: true,
         })
-        .then((data: any) => {
-          setUserPosts(data);
-          console.log("posts:", data);
+        .then((res: any) => {
+          setUserPosts(res.data.posts);
+          console.log("posts:", res.data.posts);
         })
         .catch((err) => {
           if (err.response.status == 401) {
@@ -52,8 +59,41 @@ export default function Home() {
     };
   }, []);
 
+  useEffect(() => {
+    axios
+      .get("http://localhost:4000/posts?current_page=" + pageNumber, {
+        withCredentials: true,
+      })
+      .then((res: any) => {
+        setUserPosts(res.data.posts);
+        console.log("posts:", res.data.posts);
+      })
+      .catch((err) => {
+        if (err.response.status == 401) {
+          router.push("/login");
+        } else {
+          alert("ネットワークエラー。。すこし待ってもういっかい！");
+        }
+      });
+  }, [pageNumber]);
+
   const onClickCreateDiary = () => {
     router.push("/create-diary");
+  };
+
+  const handlePrevPage = () => {
+    if (pageNumber == 1) return;
+    let prevPage: number = pageNumber - 1;
+    localStorage.setItem("currentPage", String(prevPage));
+    setPageNumber(prevPage);
+    console.log(prevPage);
+  };
+
+  const handleNextPage = () => {
+    let nextPage: number = pageNumber + 1;
+    localStorage.setItem("currentPage", String(nextPage));
+    setPageNumber(nextPage);
+    console.log(nextPage);
   };
 
   return (
@@ -79,31 +119,50 @@ export default function Home() {
         </div>
       </div>
       <div className="mt-4">将来の夢：タカアシガニ</div>
-      <div className="flex mt-10 h-[50vw] bg-white">
-        <div className="w-full h-full relative border border-solid border-gray-400 border-b-0">
-          <Image src={CrabImage} layout="fill" objectFit="contain" alt="crab" />
-        </div>
-        <div className="w-full h-full relative border border-solid border-gray-400 border-b-0">
-          <Image src={CrabImage} layout="fill" objectFit="contain" alt="crab" />
-        </div>
+      <div className="handlePage">
+        <button
+          className="border border-solid border-gray-400 rounded bg-white p-1 mb-1"
+          onClick={handlePrevPage}
+        >
+          前のページ
+        </button>
+        <button
+          className="border border-solid border-gray-400 rounded bg-white p-1 mb-1"
+          onClick={handleNextPage}
+        >
+          次のページ
+        </button>
       </div>
-      <div className="flex h-[50vw] bg-white">
-        <div className="w-full h-full relative border border-solid border-gray-400 border-t-0 overflow-hidden">
-          <p className="h-6 border-b border-gray-400 mx-2">
-            2回目の投稿！星かと思って手にとったらヒトデでした☆
-          </p>
-          {elements.map((element) => (
-            <p key={element} className="h-6 border-b border-gray-400 mx-2"></p>
-          ))}
-        </div>
-        <div className="w-full h-full relative border border-solid border-gray-400 border-t-0 overflow-hidden">
-          <p className="h-6 border-b border-gray-400 mx-2">
-            初投稿！よろしくね
-          </p>
-          {elements.map((element) => (
-            <p key={element} className="h-6 border-b border-gray-400 mx-2"></p>
-          ))}
-        </div>
+      <div className="flex">
+        {userPosts?.map((post: UserPost, i) => {
+          return (
+            <div key={i} className="flex-1">
+              <div className="mt-10 h-[50vw] bg-white">
+                <div className="w-full h-full relative border border-solid border-gray-400 border-b-0">
+                  <Image
+                    src={post.image_url}
+                    layout="fill"
+                    objectFit="contain"
+                    alt="crab"
+                  />
+                </div>
+              </div>
+              <div className="bg-white flex-1">
+                <div className="w-full h-full relative border border-solid border-gray-400 border-t-0 overflow-hidden">
+                  <p className="h-6 border-b border-gray-400 mx-2">
+                    {post.text}
+                  </p>
+                  {elements.map((element) => (
+                    <p
+                      key={element}
+                      className="h-6 border-b border-gray-400 mx-2"
+                    ></p>
+                  ))}
+                </div>
+              </div>
+            </div>
+          );
+        })}
       </div>
     </main>
   );
