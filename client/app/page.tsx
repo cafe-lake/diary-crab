@@ -14,42 +14,39 @@ export default function Home() {
   const [userPosts, setUserPosts] = useState(null);
 
   useEffect(() => {
-    // useEffectの処理2回走る問題はreact公式が言ってたやり方で対応(内容は知らん)
-    return () => {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-      axios
-        .get(apiUrl + "/users/my-info", { withCredentials: true })
-        .then((data: any) => {
-          setUserInfo(data);
-          console.log("user:", data);
-        })
-        .catch((err) => {
-          if (err.response.status == 401) {
-            router.push("/login");
-          } else {
-            alert("ネットワークエラー。。すこし待ってもういっかい！");
-          }
-        });
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+    axios
+      .get(apiUrl + "/users/my-info", { withCredentials: true })
+      .then((data: any) => {
+        setUserInfo(data);
+        console.log("user:", data);
+      })
+      .catch((err) => {
+        if (err.response.status == 401) {
+          router.push("/login");
+        } else {
+          alert("ネットワークエラー。。すこし待ってもういっかい！");
+        }
+      });
 
-      // TODO: ローカルストレージからページナンバーとって変数に代入(とりあえず今は1)。
-      let current_page = 1;
+    // TODO: ローカルストレージからページナンバーとって変数に代入(とりあえず今は1)。
+    let current_page = 1;
 
-      axios
-        .get(apiUrl + "/posts?current_page=" + current_page, {
-          withCredentials: true,
-        })
-        .then((data: any) => {
-          setUserPosts(data);
-          console.log("posts:", data);
-        })
-        .catch((err) => {
-          if (err.response.status == 401) {
-            router.push("/login");
-          } else {
-            alert("ネットワークエラー。。すこし待ってもういっかい！");
-          }
-        });
-    };
+    axios
+      .get(apiUrl + "/posts?current_page=" + current_page, {
+        withCredentials: true,
+      })
+      .then((data: any) => {
+        setUserPosts(data);
+        console.log("posts:", data);
+      })
+      .catch((err) => {
+        if (err.response.status == 401) {
+          router.push("/login");
+        } else {
+          alert("ネットワークエラー。。すこし待ってもういっかい！");
+        }
+      });
   }, []);
 
   const onClickCreateDiary = () => {
