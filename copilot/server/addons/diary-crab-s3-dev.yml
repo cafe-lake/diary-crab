@@ -22,10 +22,10 @@ Resources:
         - ServerSideEncryptionByDefault:
             SSEAlgorithm: AES256
       PublicAccessBlockConfiguration:
-        BlockPublicAcls: false
+        BlockPublicAcls: true
         BlockPublicPolicy: true
-        IgnorePublicAcls: false
-        RestrictPublicBuckets: false
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
       OwnershipControls:
         Rules:
           - ObjectOwnership: BucketOwnerEnforced
