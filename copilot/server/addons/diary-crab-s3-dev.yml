@@ -23,8 +23,8 @@ Resources:
             SSEAlgorithm: AES256
       PublicAccessBlockConfiguration:
         BlockPublicAcls: false
-        BlockPublicPolicy: false
-        IgnorePublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: false
         RestrictPublicBuckets: true
       OwnershipControls:
         Rules:
