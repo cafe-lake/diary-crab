@@ -47,7 +47,7 @@ Resources:
         Version: '2012-10-17'
         Statement:
           - Sid: ForceHTTPS
-            Effect: Allow
+            Effect: Deny
             Principal: '*'
             Action: 's3:*'
             Resource: 
