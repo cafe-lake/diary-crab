@@ -16,26 +16,23 @@ const checkAuth = require("../middleware/checkAuth");
 const router = Router();
 const prisma = new PrismaClient();
 
-const credentials = () => {
-  switch (process.env.NODE_ENV) {
-    case "local":
-      return fromSSO({
+const s3 = () => {
+  if (process.env.NODE_ENV == "local") {
+    return new S3Client({
+      region: "ap-northeast-1",
+      credentials: fromSSO({
         profile: process.env.AWS_PROFILE,
         ssoStartUrl: process.env.AWS_SSO_START_URL,
         ssoAccountId: process.env.AWS_ACCOUNT_ID,
         ssoRegion: process.env.AWS_REGION,
         ssoRoleName: process.env.AWS_SSO_ROLE_NAME,
         ssoSession: process.env.AWS_SSO_SESSION,
-      });
-    case "develop":
-      return null;
+      }),
+    });
+  } else {
+    return new S3Client();
   }
 };
-
-const s3 = new S3Client({
-  region: "ap-northeast-1",
-  credentials: credentials,
-});
 
 router.get("/public", (req: Request, res: Response) => {
   res.json();
