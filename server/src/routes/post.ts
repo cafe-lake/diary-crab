@@ -16,7 +16,7 @@ const checkAuth = require("../middleware/checkAuth");
 const router = Router();
 const prisma = new PrismaClient();
 
-const s3 = () => {
+const s3: any = () => {
   if (process.env.NODE_ENV == "local") {
     return new S3Client({
       region: "ap-northeast-1",
