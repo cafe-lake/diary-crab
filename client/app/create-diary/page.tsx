@@ -25,7 +25,7 @@ export default function Home() {
   const [text, setText] = useState("");
 
   useEffect(() => {
-    return () => {
+    
       const apiUrl = process.env.NEXT_PUBLIC_API_URL;
       axios
         .get(apiUrl + "/users/my-info", { withCredentials: true })
@@ -59,7 +59,7 @@ export default function Home() {
           height: divRef.current.offsetHeight,
         });
       }
-    };
+    
   }, []);
 
   /**
