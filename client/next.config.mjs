@@ -4,10 +4,7 @@ const nextConfig = {
     config.externals = [...config.externals, { canvas: "canvas" }]; // required to make Konva & react-konva work
     return config;
   },
-  output: "standalone",
-  env: {
-    NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL
-  }
+  // output: "standalone",
 };
 
 export default nextConfig;
