@@ -4,6 +4,8 @@ import { PrismaClient } from "@prisma/client";
 import { AuthenticatedRequest } from "../types/user";
 import { Post } from "../types/post";
 
+import { fromContainerMetadata } from "@aws-sdk/credential-providers";
+
 const { PutObjectCommand, S3Client } = require("@aws-sdk/client-s3");
 const { fromSSO } = require("@aws-sdk/credential-provider-sso");
 const multiparty = require("multiparty");
@@ -14,19 +16,21 @@ const checkAuth = require("../middleware/checkAuth");
 const router = Router();
 const prisma = new PrismaClient();
 
-const credentials = fromSSO({
-  profile: process.env.AWS_PROFILE,
-  ssoStartUrl: process.env.AWS_SSO_START_URL,
-  ssoAccountId: process.env.AWS_ACCOUNT_ID,
-  ssoRegion: process.env.AWS_REGION,
-  ssoRoleName: process.env.AWS_SSO_ROLE_NAME,
-  ssoSession: process.env.AWS_SSO_SESSION,
-});
+let s3 = new S3Client();
 
-const s3 = new S3Client({
-  region: "ap-northeast-1",
-  credentials: credentials,
-});
+if (process.env.NODE_ENV == "local") {
+  s3 = new S3Client({
+    region: "ap-northeast-1",
+    credentials: fromSSO({
+      profile: process.env.AWS_PROFILE,
+      ssoStartUrl: process.env.AWS_SSO_START_URL,
+      ssoAccountId: process.env.AWS_ACCOUNT_ID,
+      ssoRegion: process.env.AWS_REGION,
+      ssoRoleName: process.env.AWS_SSO_ROLE_NAME,
+      ssoSession: process.env.AWS_SSO_SESSION,
+    }),
+  });
+}
 
 router.get("/public", (req: Request, res: Response) => {
   res.json();
@@ -92,7 +96,7 @@ router.post("/", checkAuth, (req: AuthenticatedRequest, res: Response) => {
     const now = new Date().getTime();
     const filename = String(req.user_id) + "-" + String(now) + ".png";
     const command = new PutObjectCommand({
-      Bucket: "diary-crab-pictures",
+      Bucket: process.env.DIARYCRABS3_NAME,
       Key: "posts/" + filename,
       Body: decode_data,
       ContentType: "image/png",
@@ -103,6 +107,7 @@ router.post("/", checkAuth, (req: AuthenticatedRequest, res: Response) => {
       await s3.send(command);
     } catch (error) {
       res.status(500).json({ error: String(error) });
+      return;
     }
 
     // 投稿を保存

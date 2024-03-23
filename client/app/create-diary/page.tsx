@@ -25,41 +25,39 @@ export default function Home() {
   const [text, setText] = useState("");
 
   useEffect(() => {
-    return () => {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-      axios
-        .get(apiUrl + "/users/my-info", { withCredentials: true })
-        .then((data: any) => {
-          setUserInfo(data.data.user);
-          console.log("user:", data.data.user);
-        })
-        .catch((err) => {
-          if (err.response.status == 401) {
-            router.push("/login");
-          } else {
-            alert("ネットワークエラー。。すこし待ってもういっかい！");
-          }
-        });
-      axios
-        .get(apiUrl + "/canvas-items", { withCredentials: true })
-        .then((data: any) => {
-          setOptions(data.data.canvas_items);
-          console.log("canvas_items:", data.data.canvas_items);
-        })
-        .catch((err) => {
-          if (err.response.status == 401) {
-            router.push("/login");
-          } else {
-            alert("ネットワークエラー。。すこし待ってもういっかい！");
-          }
-        });
-      if (divRef.current?.offsetHeight && divRef.current?.offsetWidth) {
-        setDimensions({
-          width: divRef.current.offsetWidth,
-          height: divRef.current.offsetHeight,
-        });
-      }
-    };
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+    axios
+      .get(apiUrl + "/users/my-info", { withCredentials: true })
+      .then((data: any) => {
+        setUserInfo(data.data.user);
+        console.log("user:", data.data.user);
+      })
+      .catch((err) => {
+        if (err.response.status == 401) {
+          router.push("/login");
+        } else {
+          alert("ネットワークエラー。。すこし待ってもういっかい！");
+        }
+      });
+    axios
+      .get(apiUrl + "/canvas-items", { withCredentials: true })
+      .then((data: any) => {
+        setOptions(data.data.canvas_items);
+        console.log("canvas_items:", data.data.canvas_items);
+      })
+      .catch((err) => {
+        if (err.response.status == 401) {
+          router.push("/login");
+        } else {
+          alert("ネットワークエラー。。すこし待ってもういっかい！");
+        }
+      });
+    if (divRef.current?.offsetHeight && divRef.current?.offsetWidth) {
+      setDimensions({
+        width: divRef.current.offsetWidth,
+        height: divRef.current.offsetHeight,
+      });
+    }
   }, []);
 
   /**

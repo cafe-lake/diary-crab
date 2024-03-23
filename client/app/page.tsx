@@ -16,47 +16,43 @@ export default function Home() {
   const [pageNumber, setPageNumber] = useState(1);
 
   useEffect(() => {
-    // useEffectの処理2回走る問題はreact公式が言ってたやり方で対応(内容は知らん)
-    return () => {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-      axios
-        .get(apiUrl + "/users/my-info", { withCredentials: true })
-        .then((data: any) => {
-          setUserInfo(data);
-          console.log("user:", data);
-        })
-        .catch((err) => {
-          if (err.response.status == 401) {
-            router.push("/login");
-          } else {
-            alert("ネットワークエラー。。すこし待ってもういっかい！");
-          }
-        });
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+    axios
+      .get(apiUrl + "/users/my-info", { withCredentials: true })
+      .then((data: any) => {
+        setUserInfo(data);
+        console.log("user:", data);
+      })
+      .catch((err) => {
+        if (err.response.status == 401) {
+          router.push("/login");
+        } else {
+          alert("ネットワークエラー。。すこし待ってもういっかい！");
+        }
+      });
 
-      // TODO: ローカルストレージからページナンバーとって変数に代入(とりあえず今は1)。
-      let current_page: number = 1;
-      if (localStorage.getItem("currentPage") === null) {
-        localStorage.setItem("currentPage", String(current_page));
-      } else {
-        current_page = Number(localStorage.getItem("currentPage"));
-      }
+    let current_page: number = 1;
+    if (localStorage.getItem("currentPage") === null) {
+      localStorage.setItem("currentPage", String(current_page));
+    } else {
+      current_page = Number(localStorage.getItem("currentPage"));
+    }
 
-      axios
-        .get(apiUrl + "/posts?current_page=" + current_page, {
-          withCredentials: true,
-        })
-        .then((res: any) => {
-          setUserPosts(res.data.posts);
-          console.log("posts:", res.data.posts);
-        })
-        .catch((err) => {
-          if (err.response.status == 401) {
-            router.push("/login");
-          } else {
-            alert("ネットワークエラー。。すこし待ってもういっかい！");
-          }
-        });
-    };
+    axios
+      .get(apiUrl + "/posts?current_page=" + current_page, {
+        withCredentials: true,
+      })
+      .then((res: any) => {
+        setUserPosts(res.data.posts);
+        console.log("posts:", res.data.posts);
+      })
+      .catch((err) => {
+        if (err.response.status == 401) {
+          router.push("/login");
+        } else {
+          alert("ネットワークエラー。。すこし待ってもういっかい！");
+        }
+      });
   }, []);
 
   useEffect(() => {

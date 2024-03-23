@@ -6,10 +6,12 @@ COPY package*.json ./
 
 RUN npm install
 
+ENV NEXT_PUBLIC_API_URL "https://api.diary-crab-dev.com"
+
 COPY . .
+
+RUN npm run build
 
 EXPOSE 3000
 
-ENV NEXT_PUBLIC_API_URL "http://diary--Publi-YJ5h9M3xxGbz-783675325.ap-northeast-1.elb.amazonaws.com"
-
-CMD ["npm", "run", "dev"]
+CMD ["npm", "start"]
