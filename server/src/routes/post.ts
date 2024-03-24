@@ -17,8 +17,7 @@ const router = Router();
 const prisma = new PrismaClient();
 
 let s3 = new S3Client();
-
-if (process.env.NODE_ENV == "local") {
+if (process.env.NODE_ENV == "development") {
   s3 = new S3Client({
     region: "ap-northeast-1",
     credentials: fromSSO({

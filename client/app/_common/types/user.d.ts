@@ -4,3 +4,9 @@ export interface User {
     password: String,
     password_check: String
   }
+
+  export interface UserPost {
+    image_url: string,
+    text: string,
+  }
+ 

@@ -2,8 +2,6 @@ FROM node:20
 
 WORKDIR /app
 
-ENV NODE_ENV=local
-
 COPY package*.json ./
 
 RUN npm install
