@@ -1,17 +1,15 @@
 "use client";
 import Link from "next/link";
 import axios from "axios";
-import { User } from "../_common/types/user";
+import { User } from "@/app/_common/types/user";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import Introcuce from "./introduce";
 
 
 export default function Home() {
   const router = useRouter();
   const [loginId, setLoginId] = useState("");
   const [password, setPassword] = useState("");
-  const [showModal, setShowModal] = useState(false);
 
   const onClickSubmit = async () => {
     const apiUrl = process.env.NEXT_PUBLIC_API_URL;
@@ -37,27 +35,11 @@ export default function Home() {
   };
 
 
-  const introduce = () => {
-    setShowModal(true); // モーダルを表示する
-  };
-
-
   return (
     <main className="flex min-h-screen flex-col items-center justify-between">
       <div className="flex flex-col items-center justify-center min-h-screen">
         <h2 className="text-2xl font-bold mb-4">ログイン</h2>
-        <div className="flex justify-end mb-4">
-          <button
-            className="bg-white text-black font-bold py-2 px-4 rounded-full focus:outline-none focus:shadow-outline"
-            onClick={introduce}
-          >
-            絵日記クラブとは？
-          </button>
-
-          {/* モーダルコンポーネント */}
-          <Introcuce showModal={showModal} closeModal={() => setShowModal(false)} />
-        </div>
-
+        
         <form className="w-full max-w-sm">
           <div className="mb-4">
             <label
@@ -89,7 +71,7 @@ export default function Home() {
           </div>
           <button
             type="submit"
-            className="w-full bg-black text-white font-bold py-2 px-4 rounded-full focus:outline-none focus:shadow-outline"
+            className="w-full bg-blue-500 text-white font-bold py-2 px-4 rounded-full focus:outline-none focus:shadow-outline"
             onClick={(e) => {
               e.preventDefault();
               onClickSubmit();

@@ -3,7 +3,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import axios from "axios";
-import { User } from "../_common/types/user";
+import { User } from "@/app/_common/types/user";
+import Introcuce from "@/components/introduce";
 
 export default function Home() {
   const router = useRouter();
@@ -11,6 +12,7 @@ export default function Home() {
   const [loginId, setLoginId] = useState("");
   const [password, setPassword] = useState("");
   const [passwordCheck, setPasswordCheck] = useState("");
+  const [showModal, setShowModal] = useState(false);
 
   const onClickSubmit = async () => {
     console.log("register処理開始");
@@ -38,10 +40,26 @@ export default function Home() {
       });
   };
 
+  const introduce = () => {
+    setShowModal(true); // モーダルを表示する
+  };
+
   return (
     <main className="flex min-h-screen flex-col items-center justify-between">
       <div className="flex flex-col items-center justify-center min-h-screen">
         <h2 className="text-2xl font-bold mb-4">カニになる</h2>
+        <div className="flex justify-end mb-4">
+          <button
+            className="bg-white text-black font-bold py-2 px-4 rounded-full focus:outline-none focus:shadow-outline"
+            onClick={introduce}
+          >
+            絵日記クラブとは？
+          </button>
+
+          {/* モーダルコンポーネント */}
+          <Introcuce showModal={showModal} closeModal={() => setShowModal(false)} />
+        </div>
+
         <form className="w-full max-w-sm">
           <div className="mb-4">
             <label
