@@ -9,13 +9,28 @@ import Introcuce from "@/components/introduce";
 export default function Home() {
   const router = useRouter();
   const [userName, setUserName] = useState("");
+  const [userNameErrorMsg, setUserNameErrorMsg] = useState("");
   const [loginId, setLoginId] = useState("");
+  const [loginIdErrorMsg, setLoginIdErrorMsg] = useState("");
   const [password, setPassword] = useState("");
+  const [passwordErrorMsg, setPasswordErrorMsg] = useState("");
   const [passwordCheck, setPasswordCheck] = useState("");
+  const [passwordCheckErrorMsg, setPasswordCheckErrorMsg] = useState("");
   const [showModal, setShowModal] = useState(false);
 
   const onClickSubmit = async () => {
-    console.log("register処理開始");
+    setLoginIdErrorMsg("");
+    setPasswordErrorMsg("");
+    if (!userName) {
+      setUserNameErrorMsg("名前は必須です！");
+    } else {
+      setUserNameErrorMsg("");
+    }
+    if (password != passwordCheck) {
+      setPasswordCheckErrorMsg("パスワードが一致していません");
+      return;
+    }
+    setPasswordCheckErrorMsg("");
     const apiUrl = process.env.NEXT_PUBLIC_API_URL;
     const res = await axios
       .post<User>(
@@ -29,13 +44,18 @@ export default function Home() {
         { withCredentials: true }
       )
       .then(() => {
-        console.log("ログイン成功");
+        console.log("登録成功");
         router.push("/become-crab");
       })
       .catch((error) => {
-        console.log("ログイン失敗");
-        console.log(error);
-        // TODO: error.response.data.errosが原因なので、ここでinvalidな入力フォームの下に赤い文字で原因を表示してあげる
+        const errors = error.response.data.errors;
+        errors.forEach((err: any) => {
+          if (err.path == "loginId") {
+            setLoginIdErrorMsg(err.msg);
+          } else if (err.path == "password") {
+            setPasswordErrorMsg(err.msg);
+          }
+        });
         return;
       });
   };
@@ -57,11 +77,14 @@ export default function Home() {
           </button>
 
           {/* モーダルコンポーネント */}
-          <Introcuce showModal={showModal} closeModal={() => setShowModal(false)} />
+          <Introcuce
+            showModal={showModal}
+            closeModal={() => setShowModal(false)}
+          />
         </div>
 
         <form className="w-full max-w-sm">
-          <div className="mb-4">
+          <div>
             <label
               htmlFor="name"
               className="block text-gray-700 font-bold mb-2"
@@ -75,7 +98,8 @@ export default function Home() {
               onChange={(event) => setUserName(event.target.value)}
             />
           </div>
-          <div className="mb-4">
+          <div className="mb-4 text-red-500">{userNameErrorMsg}</div>
+          <div>
             <label
               htmlFor="email"
               className="block text-gray-700 font-bold mb-2"
@@ -89,7 +113,8 @@ export default function Home() {
               onChange={(event) => setLoginId(event.target.value)}
             />
           </div>
-          <div className="mb-4">
+          <div className="mb-4 text-red-500">{loginIdErrorMsg}</div>
+          <div>
             <label
               htmlFor="password"
               className="block text-gray-700 font-bold mb-2"
@@ -103,7 +128,8 @@ export default function Home() {
               onChange={(event) => setPassword(event.target.value)}
             />
           </div>
-          <div className="mb-4">
+          <div className="mb-4 text-red-500">{passwordErrorMsg}</div>
+          <div>
             <label
               htmlFor="password"
               className="block text-gray-700 font-bold mb-2"
@@ -117,6 +143,7 @@ export default function Home() {
               onChange={(event) => setPasswordCheck(event.target.value)}
             />
           </div>
+          <div className="mb-4 text-red-500">{passwordCheckErrorMsg}</div>
           <button
             type="submit"
             className="w-full bg-blue-500 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"

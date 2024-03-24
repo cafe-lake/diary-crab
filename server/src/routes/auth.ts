@@ -16,8 +16,9 @@ router.get("/", (req: Request, res: Response) => {
 //ユーザー新規登録
 router.post(
   "/register",
-  body("loginId").isLength({ min: 6 }),
-  body("password").isLength({ min: 8 }),
+  body("userName").isLength({ min: 1 }).withMessage('名前を入力してください'),
+  body("loginId").isLength({ min: 6 }).withMessage('6文字以上にしてください'),
+  body("password").isLength({ min: 8 }).withMessage('8文字以上にしてください'),
   async (req: Request, res: Response) => {
     const { userName, loginId, password, passwordConfirm } = req.body;
 
@@ -86,6 +87,7 @@ router.post("/login", async (req: Request, res: Response) => {
   if (!user) {
     return res.status(400).json([
       {
+        path: "loginId",
         msg: "そのユーザーは存在しません",
       },
     ]);
@@ -97,6 +99,7 @@ router.post("/login", async (req: Request, res: Response) => {
   if (!isMatch) {
     return res.status(400).json([
       {
+        path: "password",
         msg: "パスワードが違います",
       },
     ]);

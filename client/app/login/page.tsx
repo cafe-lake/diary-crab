@@ -5,13 +5,16 @@ import { User } from "@/app/_common/types/user";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-
 export default function Home() {
   const router = useRouter();
   const [loginId, setLoginId] = useState("");
+  const [loginIdErrorMsg, setLoginIdErrorMsg] = useState("");
   const [password, setPassword] = useState("");
+  const [passwordErrorMsg, setPasswordErrorMsg] = useState("");
 
   const onClickSubmit = async () => {
+    setLoginIdErrorMsg("");
+    setPasswordErrorMsg("");
     const apiUrl = process.env.NEXT_PUBLIC_API_URL;
     const res = await axios
       .post<User>(
@@ -27,21 +30,24 @@ export default function Home() {
         router.push("/");
       })
       .catch((error) => {
-        console.log("ログイン失敗");
-        console.log(error);
-        // TODO: error.response.data.errosが原因なので、ここでinvalidな入力フォームの下に赤い文字で原因を表示してあげる
+        const data = error.response.data[0];
+        console.log(data);
+        if (data.path == "loginId") {
+          setLoginIdErrorMsg(data.msg);
+        } else if (data.path == "password") {
+          setPasswordErrorMsg(data.msg);
+        }
         return;
       });
   };
-
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between">
       <div className="flex flex-col items-center justify-center min-h-screen">
         <h2 className="text-2xl font-bold mb-4">ログイン</h2>
-        
+
         <form className="w-full max-w-sm">
-          <div className="mb-4">
+          <div>
             <label
               htmlFor="email"
               className="block text-gray-700 font-bold mb-2"
@@ -55,7 +61,8 @@ export default function Home() {
               onChange={(event) => setLoginId(event.target.value)}
             />
           </div>
-          <div className="mb-4">
+          <div className="mb-4 text-red-500">{loginIdErrorMsg}</div>
+          <div>
             <label
               htmlFor="password"
               className="block text-gray-700 font-bold mb-2"
@@ -69,6 +76,7 @@ export default function Home() {
               onChange={(event) => setPassword(event.target.value)}
             />
           </div>
+          <div className="mb-4 text-red-500">{passwordErrorMsg}</div>
           <button
             type="submit"
             className="w-full bg-blue-500 text-white font-bold py-2 px-4 rounded-full focus:outline-none focus:shadow-outline"
