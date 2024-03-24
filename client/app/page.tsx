@@ -13,10 +13,11 @@ export default function Home() {
 
   const [userInfo, setUserInfo] = useState(null);
   const [userPosts, setUserPosts] = useState<UserPost[]>([]);
-  const [pageNumber, setPageNumber] = useState(1);
+  const [pageNumber, setPageNumber] = useState<number | null>(null);
+
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
   useEffect(() => {
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL;
     axios
       .get(apiUrl + "/users/my-info", { withCredentials: true })
       .then((data: any) => {
@@ -38,26 +39,13 @@ export default function Home() {
       current_page = Number(localStorage.getItem("currentPage"));
     }
 
-    axios
-      .get(apiUrl + "/posts?current_page=" + current_page, {
-        withCredentials: true,
-      })
-      .then((res: any) => {
-        setUserPosts(res.data.posts);
-        console.log("posts:", res.data.posts);
-      })
-      .catch((err) => {
-        if (err.response.status == 401) {
-          router.push("/login");
-        } else {
-          alert("ネットワークエラー。。すこし待ってもういっかい！");
-        }
-      });
+    setPageNumber(current_page);
   }, []);
 
   useEffect(() => {
+    if (!pageNumber) return;
     axios
-      .get("http://localhost:4000/posts?current_page=" + pageNumber, {
+      .get(apiUrl + "/posts?current_page=" + pageNumber, {
         withCredentials: true,
       })
       .then((res: any) => {
@@ -78,7 +66,7 @@ export default function Home() {
   };
 
   const handlePrevPage = () => {
-    if (pageNumber == 1) return;
+    if (!pageNumber || pageNumber == 1) return;
     let prevPage: number = pageNumber - 1;
     localStorage.setItem("currentPage", String(prevPage));
     setPageNumber(prevPage);
@@ -86,6 +74,7 @@ export default function Home() {
   };
 
   const handleNextPage = () => {
+    if (!pageNumber) return;
     let nextPage: number = pageNumber + 1;
     localStorage.setItem("currentPage", String(nextPage));
     setPageNumber(nextPage);
