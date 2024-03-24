@@ -18,12 +18,12 @@ const ItemImage = (props: any) => {
       setSizeIndex(index);
     } else {
       index = sizeIndex + 1;
-      setSizeIndex(index)
+      setSizeIndex(index);
     }
-    const size = sizes[index]
+    const size = sizes[index];
     setHeight(size);
     setWidth(size);
-  }
+  };
 
   return (
     <Image
@@ -33,6 +33,7 @@ const ItemImage = (props: any) => {
       width={width}
       height={height}
       onClick={onClickImage}
+      onTap={onClickImage}
     />
   );
 };
